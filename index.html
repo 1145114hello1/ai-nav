@@ -245,16 +245,36 @@
     }
 
     .logo {
-      display: grid;
-      place-items: center;
+      position: relative;
       width: 44px;
       height: 44px;
       flex-shrink: 0;
       border-radius: var(--radius);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .logo-mono {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
       font-weight: 800;
       font-size: 18px;
       letter-spacing: 0;
-      user-select: none;
+    }
+
+    .logo-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 7px;
+      background: #ffffff;
+      box-sizing: border-box;
     }
 
     .card-head {
@@ -643,10 +663,14 @@
       grid.innerHTML = list.map((item) => {
         const initial = item.n.trim().charAt(0);
         const color = textColor(item.color);
+        const logoSrc = hostOf(item.u).replace(/\./g, "-") + ".png";
         return `
           <article class="card">
             <div class="card-top">
-              <span class="logo" style="background:${item.color};color:${color}" aria-hidden="true">${initial}</span>
+              <span class="logo" aria-hidden="true">
+                <span class="logo-mono" style="background:${item.color};color:${color}">${initial}</span>
+                <img class="logo-img" src="logos/${logoSrc}" alt="" loading="lazy" onerror="this.remove()">
+              </span>
               <div class="card-head">
                 <h2>${item.n}</h2>
                 <span class="tag">${catName(item.c)}</span>
