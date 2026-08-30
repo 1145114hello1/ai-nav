@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 官网导航</title>
+  <style>
+    :root {
+      --bg: #f5f6f7;
+      --surface: #ffffff;
+      --border: #e6e8ea;
+      --border-strong: #d4d7da;
+      --text: #191b1e;
+      --muted: #6b7280;
+      --faint: #9aa1a9;
+      --accent: #0c8a6d;
+      --accent-strong: #08745c;
+      --accent-soft: #e7f4ef;
+      --danger: #b3343c;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+      --shadow-hover: 0 8px 24px rgba(16, 24, 40, 0.10);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: 0;
+      background: none;
+      color: inherit;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 20px 48px;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(245, 246, 247, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 20px 14px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #0c8a6d, #0b6f58);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .count-pill {
+      flex-shrink: 0;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .count-pill b {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 13px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(12, 138, 109, 0.16);
+    }
+
+    .search-box svg {
+      flex-shrink: 0;
+      color: var(--muted);
+    }
+
+    .search-box input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .search-box input::placeholder {
+      color: var(--faint);
+    }
+
+    .clear-btn {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .clear-btn:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex-shrink: 0;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13.5px;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .chip:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(252px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--border-strong);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      border-radius: var(--radius);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0;
+      user-select: none;
+    }
+
+    .card-head {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .card-head h2 {
+      margin: 1px 0 3px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .copy-btn {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      color: var(--faint);
+      border: 1px solid transparent;
+      transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      border-color: #cde7dd;
+    }
+
+    .desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 42px;
+    }
+
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 11px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .host {
+      min-width: 0;
+      color: var(--faint);
+      font-size: 12.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .visit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 7px;
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 650;
+      flex-shrink: 0;
+      transition: background 0.15s ease;
+    }
+
+    .visit-btn:hover {
+      background: var(--accent-strong);
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 56px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty strong {
+      display: block;
+      color: var(--text);
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+
+    .footer {
+      margin: 30px 20px 0;
+      text-align: center;
+      color: var(--faint);
+      font-size: 12.5px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 18px);
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: #202326;
+      color: #ffffff;
+      font-size: 13.5px;
+      box-shadow: var(--shadow-hover);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .header-inner {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .brand h1 {
+        font-size: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .desc {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand-row">
+        <div class="brand">
+          <div class="brand-mark">AI</div>
+          <h1>AI 官网导航</h1>
+        </div>
+        <div class="count-pill">共 <b id="count">0</b> 个</div>
+      </div>
+
+      <label class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input id="search" type="text" placeholder="搜索产品、公司或分类" autocomplete="off">
+        <button id="clear" class="clear-btn" type="button" title="清除" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </label>
+
+      <div class="chips" id="chips"></div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="grid" id="grid"></section>
+    <div class="empty" id="empty" hidden>
+      <strong>没有找到匹配的结果</strong>
+      试试其他关键词或切换分类
+    </div>
+  </main>
+
+  <footer class="footer">
+    链接均指向对应产品官网，内容仅供参考，访问时请留意官方最新地址。
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const CATEGORIES = [
+      { id: "all", name: "全部" },
+      { id: "chat", name: "对话助手" },
+      { id: "image", name: "图像生成" },
+      { id: "video", name: "视频生成" },
+      { id: "code", name: "编程开发" },
+      { id: "audio", name: "音频音乐" },
+      { id: "search", name: "搜索问答" },
+      { id: "office", name: "办公效率" },
+      { id: "research", name: "研究学术" },
+      { id: "platform", name: "模型平台" },
+      { id: "agent", name: "智能体" }
+    ];
+
+    const DATA = [
+      { n: "ChatGPT", c: "chat", d: "OpenAI 出品的旗舰对话式 AI 助手", u: "https://chatgpt.com", color: "#10a37f" },
+      { n: "Claude", c: "chat", d: "Anthropic 的安全、可靠 AI 助手", u: "https://claude.ai", color: "#d97757" },
+      { n: "Gemini", c: "chat", d: "Google 多模态 AI 助手", u: "https://gemini.google.com", color: "#4285f4" },
+      { n: "Microsoft Copilot", c: "chat", d: "微软 AI 助手，整合搜索与办公", u: "https://copilot.microsoft.com", color: "#0078d4" },
+      { n: "DeepSeek", c: "chat", d: "深度求索的高性能开源模型助手", u: "https://chat.deepseek.com", color: "#4d6bfe" },
+      { n: "Kimi", c: "chat", d: "月之暗面出品的超长文本智能助手", u: "https://kimi.com", color: "#202124" },
+      { n: "豆包", c: "chat", d: "字节跳动旗下的 AI 助手", u: "https://www.doubao.com", color: "#325ab4" },
+      { n: "文心一言", c: "chat", d: "百度推出的知识增强大语言模型", u: "https://yiyan.baidu.com", color: "#2932e1" },
+      { n: "通义", c: "chat", d: "阿里云通义千问系列 AI 助手", u: "https://tongyi.aliyun.com", color: "#ff6a00" },
+      { n: "讯飞星火", c: "chat", d: "科大讯飞推出的认知大模型", u: "https://xinghuo.xfyun.cn", color: "#1b4de4" },
+      { n: "Grok", c: "chat", d: "xAI 出品的实时联网对话 AI", u: "https://grok.com", color: "#111111" },
+      { n: "Pi", c: "chat", d: "Inflection 打造的陪伴式交流 AI", u: "https://pi.ai", color: "#8b5cf6" },
+      { n: "Poe", c: "chat", d: "Quora 出品，聚合多模型的对话平台", u: "https://poe.com", color: "#b92b27" },
+
+      { n: "Midjourney", c: "image", d: "高质量艺术图像生成工具", u: "https://www.midjourney.com", color: "#111111" },
+      { n: "DALL·E", c: "image", d: "OpenAI 推出的图像生成模型", u: "https://openai.com/dall-e-3", color: "#10a37f" },
+      { n: "Stable Diffusion", c: "image", d: "Stability AI 的开源图像模型生态", u: "https://stability.ai", color: "#6b3f9e" },
+      { n: "Ideogram", c: "image", d: "擅长文字排版与海报设计生成", u: "https://ideogram.ai", color: "#111111" },
+      { n: "Leonardo.Ai", c: "image", d: "面向游戏与设计的素材生成平台", u: "https://leonardo.ai", color: "#8b5cf6" },
+      { n: "Adobe Firefly", c: "image", d: "Adobe 旗下的创意生成工具", u: "https://firefly.adobe.com", color: "#eb1000" },
+      { n: "即梦", c: "image", d: "字节跳动的 AI 图像与视频创作平台", u: "https://jimeng.jianying.com", color: "#e91e63" },
+      { n: "LiblibAI", c: "image", d: "模型分享与在线生图创作社区", u: "https://www.liblib.art", color: "#111111" },
+      { n: "Civitai", c: "image", d: "开源模型社区与在线图像生成", u: "https://civitai.com", color: "#1971c2" },
+      { n: "Recraft", c: "image", d: "设计导向的矢量与图像生成工具", u: "https://www.recraft.ai", color: "#e8793e" },
+      { n: "Flux", c: "image", d: "Black Forest Labs 的先进图像模型", u: "https://blackforestlabs.ai", color: "#111111" },
+      { n: "Playground", c: "image", d: "易上手的平面设计生图工具", u: "https://playground.com", color: "#2563eb" },
+
+      { n: "Sora", c: "video", d: "OpenAI 推出的视频生成模型", u: "https://sora.com", color: "#10a37f" },
+      { n: "Runway", c: "video", d: "专业视频创作与视觉特效平台", u: "https://runwayml.com", color: "#111111" },
+      { n: "Pika", c: "video", d: "简单易用的 AI 视频生成工具", u: "https://pika.art", color: "#ec4899" },
+      { n: "Luma AI", c: "video", d: "Dream Machine 视频生成与 3D 创作", u: "https://lumalabs.ai", color: "#2563eb" },
+      { n: "可灵 Kling", c: "video", d: "快手推出的视频生成大模型", u: "https://klingai.com", color: "#0891b2" },
+      { n: "Vidu", c: "video", d: "生数科技的视频生成模型", u: "https://www.vidu.com", color: "#111111" },
+      { n: "HeyGen", c: "video", d: "AI 数字人视频制作平台", u: "https://www.heygen.com", color: "#6366f1" },
+      { n: "Synthesia", c: "video", d: "企业级 AI 数字人视频生成", u: "https://www.synthesia.io", color: "#0ea5e9" },
+      { n: "InVideo AI", c: "video", d: "文本驱动的营销视频生成", u: "https://invideo.io", color: "#dc2626" },
+      { n: "海螺 AI", c: "video", d: "MiniMax 的视频生成平台", u: "https://hailuoai.video", color: "#ec4899" },
+
+      { n: "GitHub Copilot", c: "code", d: "GitHub 官方 AI 编程助手", u: "https://github.com/features/copilot", color: "#24292f" },
+      { n: "Cursor", c: "code", d: "AI 优先的代码编辑器", u: "https://cursor.com", color: "#111111" },
+      { n: "Claude Code", c: "code", d: "Anthropic 的终端编程智能体", u: "https://www.anthropic.com/claude-code", color: "#d97757" },
+      { n: "Windsurf", c: "code", d: "面向开发者的智能代码编辑器", u: "https://windsurf.com", color: "#14b8a6" },
+      { n: "Replit", c: "code", d: "在线开发与 AI 协作平台", u: "https://replit.com", color: "#f26207" },
+      { n: "Codeium", c: "code", d: "免费 AI 代码补全助手", u: "https://codeium.com", color: "#4f46e5" },
+      { n: "v0", c: "code", d: "Vercel 出品，用自然语言生成界面", u: "https://v0.dev", color: "#111111" },
+      { n: "Bolt", c: "code", d: "浏览器内快速构建全栈应用", u: "https://bolt.new", color: "#6366f1" },
+      { n: "Lovable", c: "code", d: "自然语言生成完整产品", u: "https://lovable.dev", color: "#f43f5e" },
+      { n: "Tabnine", c: "code", d: "企业级 AI 代码补全", u: "https://www.tabnine.com", color: "#6d28d9" },
+      { n: "Sourcegraph Cody", c: "code", d: "理解整个代码库的 AI 助手", u: "https://sourcegraph.com/cody", color: "#7c3aed" },
+
+      { n: "Suno", c: "audio", d: "文本生成音乐的创作工具", u: "https://suno.com", color: "#111111" },
+      { n: "Udio", c: "audio", d: "AI 音乐创作与分享平台", u: "https://www.udio.com", color: "#7c3aed" },
+      { n: "ElevenLabs", c: "audio", d: "高质量 AI 语音合成与克隆", u: "https://elevenlabs.io", color: "#111111" },
+      { n: "海螺 AI", c: "audio", d: "MiniMax 的音频与语音能力", u: "https://hailuoai.com", color: "#ec4899" },
+      { n: "Play.ht", c: "audio", d: "语音合成、克隆与配音", u: "https://play.ht", color: "#0ea5e9" },
+      { n: "Murf", c: "audio", d: "专业配音与旁白生成", u: "https://murf.ai", color: "#f59e0b" },
+      { n: "Riffusion", c: "audio", d: "实时 AI 音乐生成", u: "https://www.riffusion.com", color: "#dc2626" },
+      { n: "Adobe Podcast", c: "audio", d: "AI 音频增强与录音优化", u: "https://podcast.adobe.com", color: "#eb1000" },
+
+      { n: "Perplexity", c: "search", d: "带来源引用的 AI 答案引擎", u: "https://www.perplexity.ai", color: "#20b8cd" },
+      { n: "You.com", c: "search", d: "AI 搜索与个性化助理", u: "https://you.com", color: "#6366f1" },
+      { n: "Phind", c: "search", d: "面向开发者的 AI 搜索引擎", u: "https://www.phind.com", color: "#4f46e5" },
+      { n: "Felo", c: "search", d: "多语言 AI 搜索与问答", u: "https://felo.ai", color: "#2563eb" },
+      { n: "秘塔 AI 搜索", c: "search", d: "中文场景下的 AI 搜索工具", u: "https://metaso.cn", color: "#111111" },
+      { n: "Devv", c: "search", d: "面向开发者的中文 AI 搜索", u: "https://devv.ai", color: "#6366f1" },
+
+      { n: "Notion AI", c: "office", d: "Notion 内置的写作与知识 AI", u: "https://www.notion.so/product/ai", color: "#111111" },
+      { n: "Gamma", c: "office", d: "AI 生成演示文稿与文档", u: "https://gamma.app", color: "#8b5cf6" },
+      { n: "Grammarly", c: "office", d: "英文写作润色与纠错助手", u: "https://www.grammarly.com", color: "#15c39a" },
+      { n: "DeepL", c: "office", d: "高质量机器翻译工具", u: "https://www.deepl.com", color: "#0f2b46" },
+      { n: "Otter.ai", c: "office", d: "会议记录与语音转写", u: "https://otter.ai", color: "#0ea5e9" },
+      { n: "腾讯元宝", c: "office", d: "腾讯推出的 AI 助手", u: "https://yuanbao.tencent.com", color: "#2f80ed" },
+      { n: "飞书智能伙伴", c: "office", d: "飞书内置的办公 AI 助手", u: "https://www.feishu.cn/product/ai", color: "#3370ff" },
+      { n: "WPS AI", c: "office", d: "WPS 办公套件的 AI 能力", u: "https://ai.wps.cn", color: "#ef4444" },
+      { n: "Zapier", c: "office", d: "AI 驱动的自动化工作流", u: "https://zapier.com", color: "#ff4f00" },
+      { n: "n8n", c: "office", d: "开源自动化工作流平台", u: "https://n8n.io", color: "#ea4b71" },
+
+      { n: "Elicit", c: "research", d: "AI 科研文献检索与总结", u: "https://elicit.com", color: "#6366f1" },
+      { n: "Semantic Scholar", c: "research", d: "学术文献智能搜索引擎", u: "https://www.semanticscholar.org", color: "#1857b6" },
+      { n: "Consensus", c: "research", d: "基于科研论文的 AI 搜索", u: "https://consensus.app", color: "#2563eb" },
+      { n: "Connected Papers", c: "research", d: "论文关联关系可视化", u: "https://www.connectedpapers.com", color: "#111111" },
+      { n: "Scite", c: "research", d: "智能引用分析与文献验证", u: "https://scite.ai", color: "#2563eb" },
+      { n: "Research Rabbit", c: "research", d: "文献推荐与知识图谱", u: "https://researchrabbitapp.com", color: "#f97316" },
+      { n: "SciSpace", c: "research", d: "论文阅读、写作与交流", u: "https://scispace.com", color: "#0ea5e9" },
+
+      { n: "OpenAI", c: "platform", d: "AI 模型、产品与 API 平台", u: "https://openai.com", color: "#10a37f" },
+      { n: "Anthropic", c: "platform", d: "Claude 系列模型与 API", u: "https://www.anthropic.com", color: "#d97757" },
+      { n: "Google AI", c: "platform", d: "Google 的 AI 研究与产品", u: "https://ai.google", color: "#4285f4" },
+      { n: "Meta AI", c: "platform", d: "Meta 的 AI 助手与研究", u: "https://www.meta.ai", color: "#0866ff" },
+      { n: "Hugging Face", c: "platform", d: "开源模型、数据集与社区", u: "https://huggingface.co", color: "#d4a017" },
+      { n: "NVIDIA AI", c: "platform", d: "AI 计算平台与模型生态", u: "https://www.nvidia.com/en-us/ai", color: "#76b900" },
+      { n: "Mistral AI", c: "platform", d: "欧洲领先的开源模型公司", u: "https://mistral.ai", color: "#ff7000" },
+      { n: "Cohere", c: "platform", d: "面向企业的语言模型平台", u: "https://cohere.com", color: "#39594d" },
+      { n: "Together AI", c: "platform", d: "开源模型推理与训练平台", u: "https://www.together.ai", color: "#111111" },
+      { n: "Replicate", c: "platform", d: "云端模型托管与运行", u: "https://replicate.com", color: "#111111" },
+      { n: "Fireworks AI", c: "platform", d: "高性能生成式 AI 推理", u: "https://fireworks.ai", color: "#ef4444" },
+
+      { n: "Manus", c: "agent", d: "通用型自主智能体", u: "https://manus.im", color: "#111111" },
+      { n: "AutoGPT", c: "agent", d: "自主任务执行智能体", u: "https://autogpt.net", color: "#111111" },
+      { n: "LangChain", c: "agent", d: "LLM 应用开发框架", u: "https://www.langchain.com", color: "#1c3c3c" },
+      { n: "CrewAI", c: "agent", d: "多智能体协作框架", u: "https://www.crewai.com", color: "#ef4444" },
+      { n: "Dify", c: "agent", d: "开源 LLM 应用开发平台", u: "https://dify.ai", color: "#2563eb" },
+      { n: "扣子 Coze", c: "agent", d: "字节跳动的智能体开发平台", u: "https://www.coze.cn", color: "#111111" }
+    ];
+
+    const ICONS = {
+      external: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>',
+      copy: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>'
+    };
+
+    const grid = document.getElementById("grid");
+    const chipsEl = document.getElementById("chips");
+    const searchEl = document.getElementById("search");
+    const clearEl = document.getElementById("clear");
+    const emptyEl = document.getElementById("empty");
+    const countEl = document.getElementById("count");
+    const toastEl = document.getElementById("toast");
+
+    let activeCategory = "all";
+    let query = "";
+    let toastTimer = null;
+
+    function catName(id) {
+      return CATEGORIES.find((c) => c.id === id)?.name || "";
+    }
+
+    function hostOf(url) {
+      try {
+        return new URL(url).hostname.replace(/^www\./, "");
+      } catch {
+        return url;
+      }
+    }
+
+    function textColor(hex) {
+      const raw = hex.replace("#", "");
+      const full = raw.length === 3 ? raw.split("").map((x) => x + x).join("") : raw;
+      const r = parseInt(full.slice(0, 2), 16);
+      const g = parseInt(full.slice(2, 4), 16);
+      const b = parseInt(full.slice(4, 6), 16);
+      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      return luminance > 0.62 ? "#191b1e" : "#ffffff";
+    }
+
+    function renderChips() {
+      chipsEl.innerHTML = CATEGORIES.map((cat) =>
+        `<button class="chip${cat.id === activeCategory ? " active" : ""}" type="button" data-cat="${cat.id}">${cat.name}</button>`
+      ).join("");
+    }
+
+    function render() {
+      const q = query.trim().toLowerCase();
+      const list = DATA.filter((item) => {
+        const matchCat = activeCategory === "all" || item.c === activeCategory;
+        if (!matchCat) return false;
+        if (!q) return true;
+        const haystack = [item.n, item.d, catName(item.c), hostOf(item.u), item.u].join(" ").toLowerCase();
+        return haystack.includes(q);
+      });
+
+      countEl.textContent = list.length;
+      emptyEl.hidden = list.length > 0;
+
+      grid.innerHTML = list.map((item) => {
+        const initial = item.n.trim().charAt(0);
+        const color = textColor(item.color);
+        return `
+          <article class="card">
+            <div class="card-top">
+              <span class="logo" style="background:${item.color};color:${color}" aria-hidden="true">${initial}</span>
+              <div class="card-head">
+                <h2>${item.n}</h2>
+                <span class="tag">${catName(item.c)}</span>
+              </div>
+              <button class="copy-btn" type="button" data-url="${item.u}" title="复制链接" aria-label="复制链接">${ICONS.copy}</button>
+            </div>
+            <p class="desc">${item.d}</p>
+            <div class="card-foot">
+              <span class="host">${hostOf(item.u)}</span>
+              <a class="visit-btn" href="${item.u}" target="_blank" rel="noopener noreferrer">官网 ${ICONS.external}</a>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function showToast(text) {
+      toastEl.textContent = text;
+      toastEl.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1600);
+    }
+
+    function updateSearchUI() {
+      clearEl.hidden = searchEl.value.length === 0;
+    }
+
+    chipsEl.addEventListener("click", (event) => {
+      const chip = event.target.closest(".chip");
+      if (!chip) return;
+      activeCategory = chip.dataset.cat;
+      renderChips();
+      render();
+    });
+
+    searchEl.addEventListener("input", () => {
+      query = searchEl.value;
+      updateSearchUI();
+      render();
+    });
+
+    clearEl.addEventListener("click", () => {
+      searchEl.value = "";
+      query = "";
+      updateSearchUI();
+      render();
+      searchEl.focus();
+    });
+
+    grid.addEventListener("click", (event) => {
+      const btn = event.target.closest(".copy-btn");
+      if (!btn) return;
+      const url = btn.dataset.url;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(() => showToast("链接已复制")).catch(() => fallbackCopy(url));
+      } else {
+        fallbackCopy(url);
+      }
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showToast("链接已复制");
+      } catch {
+        showToast("复制失败，请手动复制");
+      }
+      document.body.removeChild(ta);
+    }
+
+    renderChips();
+    render();
+  </script>
+</body>
+</html>
